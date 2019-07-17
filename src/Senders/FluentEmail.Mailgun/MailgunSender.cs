@@ -80,6 +80,17 @@ namespace FluentEmail.Mailgun
                 parameters.Add(new KeyValuePair<string, string>("o:tag", x));
             });
 
+            foreach (var emailHeader in email.Data.Headers)
+            {
+                var key = emailHeader.Key;
+                if (!key.StartsWith("h:"))
+                {
+                    key = "h:" + emailHeader.Key;
+                }
+
+                parameters.Add(new KeyValuePair<string, string>(key, emailHeader.Value));   
+            }
+
             var files = new List<HttpFile>();
             email.Data.Attachments.ForEach(x =>
             {
@@ -100,9 +111,8 @@ namespace FluentEmail.Mailgun
             });
 
             var response = await _httpClient.PostMultipart<MailgunResponse>("messages", parameters, files).ConfigureAwait(false);
-        
-            var result = new SendResponse();
 
+            var result = new SendResponse {MessageId = response.Data.Id};
             if (!response.Success)
             {
                 result.ErrorMessages.AddRange(response.Errors.Select(x => x.ErrorMessage));

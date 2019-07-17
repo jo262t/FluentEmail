@@ -2,6 +2,7 @@ using FluentEmail.Core;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Core.Models;
 using System;
+using System.Collections.Specialized;
 using System.Net.Mail;
 using System.Text;
 using System.Threading;
@@ -106,6 +107,11 @@ namespace FluentEmail.Smtp
                 };
             }
 
+            foreach (var header in data.Headers)
+            {
+                message.Headers.Add(header.Key, header.Value);
+            }
+
             data.ToAddresses.ForEach(x =>
             {
                 message.To.Add(new MailAddress(x.EmailAddress, x.Name));
@@ -141,7 +147,11 @@ namespace FluentEmail.Smtp
 
             data.Attachments.ForEach(x =>
             {
-                message.Attachments.Add(new System.Net.Mail.Attachment(x.Data, x.Filename, x.ContentType));
+                System.Net.Mail.Attachment a = new System.Net.Mail.Attachment(x.Data, x.Filename, x.ContentType);
+
+                a.ContentId = x.ContentId;
+
+                message.Attachments.Add(a);
             });
 
             return message;

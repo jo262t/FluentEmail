@@ -183,7 +183,7 @@ namespace FluentEmail.Core
         /// <returns></returns>
 	    Task<SendResponse> SendAsync(CancellationToken? token = null);
 
-	    IFluentEmail AttachFromFilename(string filename, string contentType = null);
+	    IFluentEmail AttachFromFilename(string filename,  string contentType = null, string attachmentName = null);
 
 	    /// <summary>
 	    /// Adds a Plaintext alternative Body to the Email. Used in conjunction with an HTML email,
@@ -233,5 +233,13 @@ namespace FluentEmail.Core
 	    /// <param name="tag">Tag name, max 128 characters, ASCII only</param>
 	    /// <returns>Instance of the Email class</returns>
 	    IFluentEmail Tag(string tag);
-	}
+
+	    /// <summary>
+	    /// Adds header to the Email.
+	    /// </summary>
+	    /// <param name="header">Header name, only printable ASCII allowed.</param>
+	    /// <param name="body">value of the header</param>
+	    /// <returns>Instance of the Email class</returns>
+	    IFluentEmail Header(string header, string body);
+    }
 }

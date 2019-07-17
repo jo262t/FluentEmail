@@ -460,13 +460,13 @@ namespace FluentEmail.Core
             return this;
         }
 
-        public IFluentEmail AttachFromFilename(string filename, string contentType = null)
+        public IFluentEmail AttachFromFilename(string filename,  string contentType = null, string attachmentName = null)
         {
             var stream = File.OpenRead(filename);
             Attach(new Attachment()
             {
                 Data = stream,
-                Filename = filename,
+                Filename = attachmentName ?? filename,
                 ContentType = contentType
             });
 
@@ -481,6 +481,13 @@ namespace FluentEmail.Core
         public IFluentEmail Tag(string tag)
         {
             Data.Tags.Add(tag);
+
+            return this;
+        }
+
+        public IFluentEmail Header(string header, string body)
+        {
+            Data.Headers.Add(header, body);
 
             return this;
         }
